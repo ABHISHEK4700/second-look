@@ -132,7 +132,7 @@ def _call_gemini(contents):
     resp = requests.post(
         f"{config.GEMINI_API_BASE}/models/{config.GEMINI_MODEL}:generateContent",
         headers={"x-goog-api-key": config.GEMINI_API_KEY, "Content-Type": "application/json"},
-        json=body, timeout=90,
+        json=body, timeout=45,
     )
     if resp.status_code != 200:
         raise AgentError(f"Gemini error {resp.status_code}: {resp.text[:400]}")
