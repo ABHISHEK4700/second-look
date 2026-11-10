@@ -43,21 +43,41 @@ except requests.exceptions.Timeout:
 except requests.exceptions.RequestException as e:
     line(False, f"Network error reaching Google: {e}")
 
-print("\n3) Does the model answer? (short test, up to 60s)")
-try:
+print("\n3) Speed test (low thinking). Lower is better; the app needs ~2-3 calls per reply")
+
+
+def ask(model, thinking=True):
+    gen = {"thinkingConfig": {"thinkingLevel": "low"}} if thinking else {}
     t = time.time()
-    r = requests.post(f"{config.GEMINI_API_BASE}/models/{config.GEMINI_MODEL}:generateContent",
+    r = requests.post(f"{config.GEMINI_API_BASE}/models/{model}:generateContent",
                       headers={"x-goog-api-key": config.GEMINI_API_KEY},
-                      json={"contents": [{"role": "user", "parts": [{"text": "Say hi in 3 words."}]}]}, timeout=60)
-    if r.status_code == 200:
-        parts = r.json()["candidates"][0]["content"].get("parts", [])
-        line(True, f"Model replied in {time.time() - t:.1f}s: {' '.join(p.get('text', '') for p in parts).strip()[:80]}")
-    else:
-        line(False, f"Model error {r.status_code}: {r.text[:300]}")
-except requests.exceptions.Timeout:
-    line(False, "Model took over 60s. Try a different flash model from the list above.")
-except Exception as e:
-    line(False, f"{type(e).__name__}: {e}")
+                      json={"contents": [{"role": "user", "parts": [{"text": "Say hi in 3 words."}]}],
+                            "generationConfig": gen}, timeout=60)
+    if r.status_code == 400 and thinking and "thinking" in r.text.lower():
+        return ask(model, thinking=False)
+    if r.status_code != 200:
+        return None, f"error {r.status_code}"
+    return time.time() - t, ("low thinking" if thinking else "default thinking")
+
+
+results = []
+for m in ([config.GEMINI_MODEL] + [f for f in flash if f != config.GEMINI_MODEL])[:6]:
+    try:
+        secs, mode = ask(m)
+        if secs is None:
+            line(False, f"{m}: {mode}")
+        else:
+            line(True, f"{m}: {secs:.1f}s ({mode})")
+            results.append((secs, m))
+    except requests.exceptions.Timeout:
+        line(False, f"{m}: over 60s")
+    except Exception as e:
+        line(False, f"{m}: {type(e).__name__}")
+if results:
+    best = min(results)
+    print(f"\n  >> Fastest: {best[1]} ({best[0]:.1f}s). Put this in .env:  GEMINI_MODEL={best[1]}")
+    if best[0] > 8:
+        print("  >> Still slow. If you're on college/office Wi-Fi, try your phone's hotspot.")
 
 print("\n4) PayPal sandbox keys")
 try:

@@ -6,11 +6,18 @@ and then files a risk review. The backend combines the AI score with
 fixed scam rules and decides whether PayPal sends the money now or holds
 it for the trusted guardian.
 """
+import logging
+import time
+
 import requests
 
 import config
 import db
 import payments
+
+
+log = logging.getLogger("secondlook")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 
 
 class AgentError(Exception):
@@ -120,20 +127,36 @@ def _run_tool(name, args, ctx):
         return {"error": f"Bad arguments: {e}"}
 
 
+_thinking_supported = True
+
+
 def _call_gemini(contents):
+    global _thinking_supported
     if not config.GEMINI_API_KEY:
         raise AgentError("GEMINI_API_KEY is not set. Add it to your .env file.")
+    gen = {"temperature": 0.3}
+    if _thinking_supported and config.GEMINI_THINKING != "off":
+        gen["thinkingConfig"] = {"thinkingLevel": config.GEMINI_THINKING}
     body = {
         "systemInstruction": {"parts": [{"text": system_prompt()}]},
         "contents": contents,
         "tools": [{"functionDeclarations": TOOLS}],
-        "generationConfig": {"temperature": 0.3},
+        "generationConfig": gen,
     }
-    resp = requests.post(
-        f"{config.GEMINI_API_BASE}/models/{config.GEMINI_MODEL}:generateContent",
-        headers={"x-goog-api-key": config.GEMINI_API_KEY, "Content-Type": "application/json"},
-        json=body, timeout=45,
-    )
+    url = f"{config.GEMINI_API_BASE}/models/{config.GEMINI_MODEL}:generateContent"
+    headers = {"x-goog-api-key": config.GEMINI_API_KEY, "Content-Type": "application/json"}
+    t = time.time()
+    try:
+        resp = requests.post(url, headers=headers, json=body, timeout=60)
+        if resp.status_code == 400 and "thinking" in resp.text.lower() and "thinkingConfig" in gen:
+            _thinking_supported = False          # model doesn't accept it: retry without
+            del gen["thinkingConfig"]
+            resp = requests.post(url, headers=headers, json=body, timeout=60)
+    except requests.exceptions.Timeout:
+        raise AgentError("Gemini took too long to answer. Try again, or set a faster GEMINI_MODEL in .env.")
+    except requests.exceptions.RequestException as e:
+        raise AgentError(f"Couldn't reach Gemini: {e}")
+    log.info("gemini %s %.1fs status=%s", config.GEMINI_MODEL, time.time() - t, resp.status_code)
     if resp.status_code != 200:
         raise AgentError(f"Gemini error {resp.status_code}: {resp.text[:400]}")
     data = resp.json()
