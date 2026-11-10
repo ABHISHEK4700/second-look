@@ -2,6 +2,9 @@
 
 > Built for **Build What's Next with PayPal and AI** (Devpost, 2026).
 
+**Live demo:** https://second-look-usym.onrender.com (sender) · https://second-look-usym.onrender.com/guardian (guardian, PIN `2468`)  
+PayPal **sandbox**: log in with any sandbox *personal* test account. The free server sleeps when idle, so the first load can take ~50 s.
+
 **PayPal's AI spots the scam. Second Look adds a human the scammer can't talk past.**
 
 Scam warnings often fail for one reason: the scammer is still on the phone, coaching the victim:

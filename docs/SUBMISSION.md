@@ -52,6 +52,10 @@ at the right time. PayPal's authorization model is a natural fit for that.
 ### What's next
 Multiple guardians, SMS/WhatsApp alerts to guardians, voice input for senders, and auto-voiding stale holds.
 
+## Links
+- Live demo: https://second-look-usym.onrender.com (guardian view: /guardian, PIN 2468)
+- Code: https://github.com/ABHISHEK4700/second-look
+
 ## Built with
 python, flask, sqlite, javascript, paypal-orders-api, paypal-payments-api, paypal-payouts, paypal-javascript-sdk, google-gemini, gemini-vision, render
 
