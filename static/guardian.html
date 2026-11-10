@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Second Look · Guardian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="mark"><i></i><i></i></span> Second Look <span class="pill">Guardian</span></div>
+    <div style="display:flex;gap:14px;align-items:center">
+      <span class="pill" id="modePill">PayPal sandbox</span>
+      <a href="/">Sender view →</a>
+    </div>
+  </header>
+
+  <div class="card pin-gate" id="gate">
+    <h2>Guardian sign-in</h2>
+    <p style="color:var(--muted);margin:6px 0 0">Enter your PIN (demo default: 2468).</p>
+    <form id="pinForm"><input id="pin" type="password" inputmode="numeric" maxlength="12" autofocus>
+      <button class="btn" style="width:100%">Open</button></form>
+  </div>
+
+  <main class="guardian hidden" id="app">
+    <h1 id="title">Payments waiting for your second look</h1>
+    <div class="stats">
+      <div class="card stat" id="statHeld"><div class="label">Waiting for you</div><div class="value" id="sHeld">0</div><div class="sub">money reserved, not sent</div></div>
+      <div class="card stat"><div class="label">Scam money stopped</div><div class="value" id="sProtected">0</div><div class="sub">voided in PayPal, never left</div></div>
+      <div class="card stat"><div class="label">Sent safely</div><div class="value" id="sSent">0</div><div class="sub" id="sSentAmt"></div></div>
+      <div class="card stat"><div class="label">Blocked payments</div><div class="value" id="sBlocked">0</div><div class="sub">this account</div></div>
+    </div>
+
+    <div id="reviews"></div>
+
+    <div class="grid2 section">
+      <div class="card">
+        <div class="section-head"><h2>All payments</h2><button class="btn ghost small" id="refresh">Refresh</button></div>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th>ID</th><th>To</th><th>Amount</th><th>Risk</th><th>Status</th><th>Decided by</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table></div>
+      </div>
+      <div class="card">
+        <div class="section-head"><h2>PayPal activity</h2></div>
+        <ul class="events" id="events"></ul>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/guardian.js"></script>
+</body>
+</html>

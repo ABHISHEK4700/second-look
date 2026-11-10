@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Second Look · Send money safely</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body class="sender">
+  <header class="topbar">
+    <div class="brand"><span class="mark"><i></i><i></i></span> Second Look</div>
+    <div style="display:flex;gap:14px;align-items:center">
+      <span class="pill" id="modePill">PayPal sandbox</span>
+      <a href="/guardian">Guardian view →</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section>
+      <div class="hero">
+        <h1 id="greeting">Send money, with a second look.</h1>
+        <p>Tell me who you'd like to pay and why. I'll ask a couple of quick questions first.
+          If anything looks like a scam, your money stays safely reserved until someone you trust takes a look.</p>
+      </div>
+      <div class="card chat">
+        <div class="chat-head">
+          <div class="avatar"><span class="mark"><i></i><i></i></span></div>
+          <div><strong>Second Look</strong><small>AI payment helper · powered by Gemini · payments by PayPal</small></div>
+        </div>
+        <div class="messages" id="messages"></div>
+        <div class="chips" id="chips">
+          <button class="chip">Pay Rosa back $40 for groceries</button>
+          <button class="chip">Microsoft support says I must pay $400 to fix my computer</button>
+          <button class="chip">My grandson needs bail money urgently</button>
+        </div>
+        <div class="preview hidden" id="preview"><img alt=""><span>Screenshot attached</span>
+          <button class="btn ghost small" id="clearImg" type="button">Remove</button></div>
+        <form class="composer" id="composer">
+          <label class="attach" title="Share a screenshot of the message asking for money">📎 Screenshot
+            <input type="file" id="file" accept="image/*" hidden></label>
+          <input type="text" id="input" autocomplete="off" maxlength="600" placeholder="e.g. I want to send $200 to …">
+          <button class="btn" type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <aside class="side">
+      <div class="card guardian-card">
+        <div class="face" id="gFace">D</div>
+        <div><strong id="gName">Daniel</strong><div style="color:var(--muted);font-size:14px" id="gLine">takes a second look at risky payments</div></div>
+      </div>
+      <div class="card">
+        <h3>How it keeps you safe</h3>
+        <ol class="steps">
+          <li>Tell Second Look who you're paying and why.</li>
+          <li>It asks a few questions and can read a screenshot of the message.</li>
+          <li>You approve in PayPal. The money is <b>reserved, not sent</b>.</li>
+          <li>Safe payments go straight through. Risky ones wait for your trusted person.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Scammers often say</h3>
+        <ul class="steps">
+          <li>"Pay with gift cards or crypto."</li>
+          <li>"Don't tell anyone."</li>
+          <li>"Ignore the warning and click continue."</li>
+        </ul>
+        <p style="color:var(--muted);font-size:14px;margin:8px 0 0">Real banks, police and tech companies never ask for this.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="/static/common.js"></script>
+  <script src="/static/sender.js"></script>
+</body>
+</html>
