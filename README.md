@@ -105,6 +105,8 @@ Open them in two browser windows side by side.
    In the app's settings, make sure **Payouts** is ticked under features.
 2. **Sandbox buyer:** developer.paypal.com/dashboard/accounts → the `@personal.example.com` account → *⋯ → View/Edit* → copy its email and password. Log in with it when the PayPal window opens.
 3. **Gemini:** aistudio.google.com → *Get API key*.
+4. **Check everything:** `python check_setup.py` tests your keys, PayPal Payouts permission, and times the
+   Gemini models your key can use, then tells you the fastest one to put in `GEMINI_MODEL`.
 
 ### Demo script
 1. **Safe payment:** *"Pay Rosa back $40 for groceries, her email is rosa.neighbor@example.com"* → approve in PayPal → **sent at once** (a known recipient, low risk).

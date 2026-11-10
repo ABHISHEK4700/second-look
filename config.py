@@ -23,7 +23,7 @@ CURRENCY = _env("CURRENCY", "USD")
 
 # --- Gemini -----------------------------------------------------------------
 GEMINI_API_KEY = _env("GEMINI_API_KEY", "")
-GEMINI_MODEL = _env("GEMINI_MODEL", "gemini-3.5-flash")
+GEMINI_MODEL = _env("GEMINI_MODEL", "gemini-3-flash-preview")
 # "low" makes replies much faster; set to "off" to send no thinking setting at all
 GEMINI_THINKING = _env("GEMINI_THINKING", "low")
 GEMINI_API_BASE = _env("GEMINI_API_BASE", "https://generativelanguage.googleapis.com/v1beta")

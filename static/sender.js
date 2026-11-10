@@ -95,7 +95,9 @@
     }, 4000));
   }
 
+  const finished = new Set();
   async function authorized(p, orderId, holder) {
+    finished.add(p.id);
     const { payment } = await api("/api/payments/authorize", { method: "POST", body: { payment_id: p.id, order_id: orderId } });
     showResult(payment, holder);
   }
@@ -120,7 +122,7 @@
         style: { layout: "vertical", shape: "rect", label: "paypal", height: 44 },
         createOrder: () => p.paypal_order_id,
         onApprove: data => authorized(p, data.orderID, holder).catch(e => add("err", e.message)),
-        onCancel: () => add("sys", "PayPal window closed. Nothing was sent."),
+        onCancel: () => { if (!finished.has(p.id)) add("sys", "PayPal window closed. Nothing was sent."); },
         onError: err => add("err", "PayPal error: " + (err?.message || err)),
       }).render(btnHolder);
     } catch (e) { add("err", e.message); }
